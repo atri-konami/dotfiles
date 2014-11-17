@@ -1,0 +1,4 @@
+remove lock = Eisu_toggle
+keycode 66 = Escape NoSymbol Escape
+keycode 67 = Escape NoSymbol Escape
+
