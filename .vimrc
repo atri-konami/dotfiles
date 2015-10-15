@@ -1,12 +1,12 @@
 "テーマ設定
 "autocmd ColorScheme * highlight Comment ctermfg=22 guifg=#008800
 syntax enable
-set background=dark
+"set background=dark
 "let  g:hybrid_use_Xresources = 1
-colorscheme solarized
+"colorscheme solarized
 "colorscheme hybrid
 "colorscheme jellybeans
-"colorscheme molokai
+colorscheme molokai
 "let g:molokai_original = 1
 "let g:rehash256 = 1                                 
 
@@ -111,7 +111,7 @@ set nohlsearch
 " コマンド、検索パターンを10000個まで履歴に残す
 set history=10000
 " マウスモード有効
-set mouse=a
+"set mouse=a
 " xtermとscreen対応
 set ttymouse=xterm2
 " コマンドを画面最下部に表示する

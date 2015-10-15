@@ -1,7 +1,4 @@
-export PATH="/opt/eclipse:/opt/Qt/Tools/QtCreator/bin:/opt/Twitama/bin:$HOME/.rbenv/bin:$PATH"
-
-export DROPBOX="/windows/Dropbox"
-export DB="/windows/Dropbox"
+export PATH="$HOME/.rbenv/bin:$PATH"
 
 eval "$(rbenv init -)"
 
@@ -16,7 +13,16 @@ function comprun(){
     fi
 }
 
+function mkcd(){
+    `mkdir $1 && cd $1`
+}
+
 alias \:q='exit'
 alias g++11='g++ -std=c++11'
 alias cp='cp -ir'
 alias gosh='rlwrap gosh'
+alias xclip='xclip -selection clipboard'
+
+alias less='less -XF'
+
+alias tmux="TERM=xterm-256color tmux"
