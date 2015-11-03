@@ -15,6 +15,7 @@ if !has('gui_running')
 endif
 
 "個人的文章設定 あとに書いたコピペ部分と若干かぶる
+set imd
 set autoindent
 set smartindent
 set incsearch

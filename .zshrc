@@ -38,8 +38,12 @@ zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 #######################################
 # Prompt
 #######################################
-autoload -Uz colors
-colors
+autoload -Uz colors;colors
+autoload -Uz vcs_info
+setopt prompt_subst
+zstyle ':vcs_info:*' formats "[${fg[green]}%b${reset_color}]"
+zstyle ':vcs_info:*' actionformats "[${fg[green]}%b${reset_color}|${fg[red]}%a${reset_color}]"
+precmd (){ vcs_info }
 #PROMPT="
 # %{${fg[yellow]}%}%~%{${reset_color}%}
 #[%n]$ "
@@ -48,8 +52,13 @@ colors
 # 1行表示
 # PROMPT="%~ %# "
 # 2行表示
-PROMPT="%{${fg[red]}%}[%n@%m]%{${reset_color}%} %~
-%# "
+#PROMPT="%{${fg[red]}%}[%n@%m]%{${reset_color}%} %# "
+#PROMPT="%{${fg[red]}%}[%n@%m]%{${reset_color}%} %~ 
+#%# "
+PROMPT='%{${fg[red]}%}[%n@%m]%{${reset_color}%} [%~] ${vcs_info_msg_0_}
+%# '
+#RPROMPT='[%~] ${vcs_info_msg_0_}'
+
  
 #######################################
 # Color
