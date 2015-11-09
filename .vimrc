@@ -14,39 +14,31 @@ if !has('gui_running')
   set t_Co=256
 endif
 
-"個人的文章設定 あとに書いたコピペ部分と若干かぶる
-set imd
-set autoindent
-set smartindent
-set incsearch
-set splitright
-set cursorline
-set cmdheight=2
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-set noshowmode
 "set wildmenu wildmode=list:full
 
-"Key mapping
 
-" j&kを表示行移動に
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
-
-" Ctrl+jをESCにする
-inoremap <C-j> <ESC>
-noremap <Help> <ESC>
-
-" very magic(すべてのメタ文字を\なしで使用)
-nnoremap / /\v
-
-vmap <CR> <Plug>(gosh_repl_send_block)
-
-"コピペマンだぞ
+"個人的文章設定 あとに書いたコピペ部分と若干かぶる
+" 自動インデント
+set autoindent
+" 改行前の行の書体に合わせてインデント
+set smartindent
+" 新しいウィンドウを右に開く
+set splitright
+" カーソルライン
+set cursorline
+" コマンド部分の高さ
+set cmdheight=1
+" タブ文字の占める幅
+set tabstop=4
+" タブ文字が実際に入力された時の文字数(shiftwidthの倍数でなければspaceがはいる)
+set softtabstop=4
+" タブキーで移動する幅
+set shiftwidth=4
+" タブをスペースに展開
+set expandtab
+" ???
+set noshowmode
+" エンコーディング
 set encoding=utf8
 " ファイルエンコード
 set fileencoding=utf-8
@@ -56,6 +48,8 @@ set scrolloff=5
 set noswapfile
 " バックアップファイルを作らない
 set nowritebackup
+" undofile を作らない?
+set noundofile
 " バックアップをしない
 set nobackup
 " バックスペースで各種消せるようにする
@@ -67,7 +61,7 @@ set novisualbell
 "set clipboard+=unnamed
 set clipboard=unnamedplus,autoselect
 " 不可視文字を表示
-"set list
+set list
 " 行番号を表示
 set number
 " 右下に表示される行・列の番号を表示する
@@ -87,7 +81,7 @@ set wrap
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0
 " 不可視文字を表示
-"set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
+set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 "set listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%,eol:↲
 " インデントをshiftwidthの倍数に丸める
 set shiftround
@@ -102,7 +96,7 @@ set switchbuf=useopen
 " /gオプションデフォルトで用いる。便利？
 "set gdefault
 " 小文字の検索でも大文字も見つかるようにする
-set noignorecase
+set ignorecase
 " ただし大文字も含めた検索の場合はその通りに検索する
 set smartcase
 " インクリメンタルサーチを行う
@@ -117,23 +111,15 @@ set history=10000
 set ttymouse=xterm2
 " コマンドを画面最下部に表示する
 set showcmd
-"コピペ終わり
-
-" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
-cmap w!! w !sudo tee > /dev/null %
- 
-"highlight StatusLine term=none cterm=none ctermfg=black ctermbg=grey
-"highlight CursorLine term=reverse ctermbg=grey:
-
-"set laststatus=2
-                            
+" ステータスラインの設定
 set statusline=%F%r%h%=
+" タブ(タブ文字ではない)の占める幅
 set showtabline=2
-
+" ウィンドウのタイトル
 set title
-set cmdheight=1
+"set cmdheight=1
 set laststatus=2
-
+" コマンド表示
 set showcmd
 
 filetype off
@@ -157,23 +143,30 @@ NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'scrooloose/nerdtree'
 "NeoBundle 'Shougo/neosnippet'
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'scrooloose/syntastic'
-""NeoBundle 'https://bitbucket.org/kovisoft/slimv'
+"NeoBundle 'https://bitbucket.org/kovisoft/slimv'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'airblade/vim-gitgutter'
+"NeoBundle 'airblade/vim-gitgutter'
 "NeoBundle 'alpaca-tc/alpaca_powertabline'
-NeoBundle 'Lokaltog/powerline',{'rtp':'powerline/bindings/vim'}
+"NeoBundle 'Lokaltog/powerline',{'rtp':'powerline/bindings/vim'}
 NeoBundle 'kana/vim-filetype-haskell'
-NeoBundle 'amdt/vim-niji'
+NeoBundle 'losingkeys/vim-niji'
 NeoBundle 'aharisu/vim_goshrepl'
 NeoBundle 'kana/vim-submode'
 NeoBundle 'ujihisa/unite-colorscheme'
+"NeoBundle 'kurocode25/mdforvim'
+"NeoBundle 'plasticboy/vim-markdown'
+"NeoBundle 'kannokanno/previm'
+"NeoBundle 'tyru/open-browser.vim'
 
 call neobundle#end()
+
+au BufRead,BufNewFile *.md set filetype=markdown
 
 filetype plugin indent on     " required!
 filetype indent on
@@ -200,13 +193,13 @@ let g:lightline = {
         \ 'component_visible_condition': {
         \   'readonly': '(&filetype!="help"&& &readonly)',
         \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))'
-        \ },        
+        \ },
         \ 'separator': { 'left': '⮀', 'right': '⮂' },
         \ 'subseparator': { 'left': '⮁', 'right': '⮃' },
         \ 'tabline_separator': { 'left': '⮀', 'right': '⮂' },
         \ 'tabline_subseparator': { 'left': '⮁', 'right': '⮃' },
         \}
-"		\ 'separator': { 'left': "\u2b80", 'right': "\u2b82" },
+"        \ 'separator': { 'left': "\u2b80", 'right': "\u2b82" },
 "        \ 'subseparator': { 'left': "\u2b81", 'right': "\u2b83" }
 "        \ 'separator': { 'left': '', 'right': '' },
 "        \ 'subseparator': { 'left': '', 'right': '' }
@@ -259,6 +252,31 @@ let g:solarized_termtrans=1
 highlight Normal ctermbg=none 
 " アンダーラインを引く(color terminal)
 highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
+
+" Key mapping
+
+" j&kを表示行移動に
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+
+" Ctrl+jをESCにする
+inoremap <C-j> <ESC>
+noremap <Help> <ESC>
+
+" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
+cmap w!! w !sudo tee > /dev/null %
+
+" very magic(すべてのメタ文字を\なしで使用)
+nnoremap / /\v
+
+" Ctrl-EでNerdTreeをトグル
+nnoremap <C-e> :NERDTreeToggle<CR>
+
+" vmap <CR> <Plug>(gosh_repl_send_block)
+
+" for vim-submode
 
 nnoremap s <Nop>
 nnoremap sj <C-w>j
