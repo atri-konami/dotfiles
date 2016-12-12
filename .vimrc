@@ -25,7 +25,7 @@ set smartindent
 " 新しいウィンドウを右に開く
 set splitright
 " カーソルライン
-set cursorline
+"set cursorline
 " コマンド部分の高さ
 set cmdheight=1
 " タブ文字の占める幅
@@ -133,19 +133,18 @@ endif
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc.vim', {
   \ 'build' : {
-    \ 'windows' : 'make -f make_mingw32.mak',
-    \ 'cygwin' : 'make -f make_cygwin.mak',
-    \ 'mac' : 'make -f make_mac.mak',
-    \ 'unix' : 'make -f make_unix.mak',
+  \   'windows' : 'tools\\update-dll-mingw',
+  \   'cygwin' : 'make -f make_cygwin.mak',
+  \   'mac' : 'make',
+  \   'linux' : 'make',
+  \   'unix' : 'gmake',
   \ },
 \ }
-NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neocomplete'
 NeoBundle 'scrooloose/nerdtree'
 "NeoBundle 'Shougo/neosnippet'
-NeoBundle 'jpalardy/vim-slime'
+"NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'scrooloose/syntastic'
 "NeoBundle 'https://bitbucket.org/kovisoft/slimv'
 NeoBundle 'itchyny/lightline.vim'
@@ -154,19 +153,121 @@ NeoBundle 'thinca/vim-quickrun'
 "NeoBundle 'airblade/vim-gitgutter'
 "NeoBundle 'alpaca-tc/alpaca_powertabline'
 "NeoBundle 'Lokaltog/powerline',{'rtp':'powerline/bindings/vim'}
-NeoBundle 'kana/vim-filetype-haskell'
 NeoBundle 'losingkeys/vim-niji'
-NeoBundle 'aharisu/vim_goshrepl'
 NeoBundle 'kana/vim-submode'
 NeoBundle 'ujihisa/unite-colorscheme'
 "NeoBundle 'kurocode25/mdforvim'
 "NeoBundle 'plasticboy/vim-markdown'
 "NeoBundle 'kannokanno/previm'
 "NeoBundle 'tyru/open-browser.vim'
+"NeoBundle 'thinca/vim-template'
+"NeoBundle 'chakku000/OpenTemplate.vim'
+NeoBundle 'lervag/vimtex'
+NeoBundle 'mattn/sonictemplate-vim'
+
+"Lazys
+NeoBundleLazy 'Shougo/unite.vim', {
+  \ 'autoload': {
+  \     'commands': ['Unite']
+  \ }
+\ }
+NeoBundleLazy 'aharisu/vim_goshrepl', {
+  \ 'autoload': {
+  \     'filetypes': ['scheme']
+  \ }
+\ }
+NeoBundleLazy 'kana/vim-filetype-haskell', {
+  \ 'autoload': {
+  \     'filetypes': ['haskell']
+  \ }
+\ }
+NeoBundleLazy 'leafgarland/typescript-vim', {
+  \ 'autoload' : {
+  \     'filetypes' : ['typescript'] }
+\}
+NeoBundleLazy 'jason0x43/vim-js-indent', {
+  \ 'autoload' : {
+  \   'filetypes' : ['javascript', 'typescript', 'html'],
+\}}
+
+let g:js_indent_typescript = 1
 
 call neobundle#end()
 
 au BufRead,BufNewFile *.md set filetype=markdown
+
+let g:tex_flavor = 'latex'
+let g:sonictemplate_vim_template_dir = [
+    \ '~/work/templates'
+    \]
+
+ " LaTeX Quickrun
+let g:quickrun_config = {}
+let g:quickrun_config['tex'] = {
+\ 'command' : 'latexmk',
+\ 'outputter' : 'error',
+\ 'outputter/error/success' : 'null',
+\ 'outputter/error/error' : 'quickfix',
+\ 'srcfile' : expand("%"),
+\ 'cmdopt': '-pdfdvi',
+\ 'hook/sweep/files' : [
+\                      '%S:p:r.aux',
+\                      '%S:p:r.bbl',
+\                      '%S:p:r.blg',
+\                      '%S:p:r.dvi',
+\                      '%S:p:r.fdb_latexmk',
+\                      '%S:p:r.fls',
+\                      '%S:p:r.log',
+\                      '%S:p:r.out'
+\                      ],
+\ 'exec': '%c %o %a %s',
+\}
+
+" 部分的に選択してコンパイル
+" http://auewe.hatenablog.com/entry/2013/12/25/033416 を参考に
+let g:quickrun_config.tmptex = {
+\   'exec': [
+\           'mv %s %a/tmptex.latex',
+\           'latexmk -pdfdvi -pv -output-directory=%a %a/tmptex.latex',
+\           ],
+\   'args' : expand("%:p:h:gs?\\\\?/?"),
+\   'outputter' : 'error',
+\   'outputter/error/error' : 'quickfix',
+\
+\   'hook/eval/enable' : 1,
+\   'hook/eval/cd' : "%s:r",
+\
+\   'hook/eval/template' : '\documentclass{jsarticle}'
+\                         .'\usepackage[dvipdfmx]{graphicx, hyperref}'
+\                         .'\usepackage{float}'
+\                         .'\usepackage{amsmath,amssymb,amsthm,ascmac,mathrsfs}'
+\                         .'\allowdisplaybreaks[1]'
+\                         .'\theoremstyle{definition}'
+\                         .'\newtheorem{theorem}{定理}'
+\                         .'\newtheorem*{theorem*}{定理}'
+\                         .'\newtheorem{definition}[theorem]{定義}'
+\                         .'\newtheorem*{definition*}{定義}'
+\                         .'\renewcommand\vector[1]{\mbox{\boldmath{\$#1\$}}}'
+\                         .'\begin{document}'
+\                         .'%s'
+\                         .'\end{document}',
+\
+\   'hook/sweep/files' : [
+\                        '%a/tmptex.latex',
+\                        '%a/tmptex.out',
+\                        '%a/tmptex.fdb_latexmk',
+\                        '%a/tmptex.log',
+\                        '%a/tmptex.aux',
+\                        '%a/tmptex.dvi'
+\                        ],
+\}
+
+vnoremap <silent><buffer> <F5> :QuickRun -mode v -type tmptex<CR>
+
+" QuickRun and view compile result quickly (but don't preview pdf file)
+nnoremap <silent><F5> :QuickRun<CR>
+
+autocmd BufWritePost,FileWritePost *.tex QuickRun tex
 
 filetype plugin indent on     " required!
 filetype indent on
@@ -274,7 +375,10 @@ nnoremap / /\v
 " Ctrl-EでNerdTreeをトグル
 nnoremap <C-e> :NERDTreeToggle<CR>
 
-" vmap <CR> <Plug>(gosh_repl_send_block)
+let g:OpenTemplate#Template_dir = '~/work/kyo-pro/cp-template/template'
+nnoremap <C-l> :OpenTemplate<CR>
+
+vmap <CR> <Plug>(gosh_repl_send_block)
 
 " for vim-submode
 
