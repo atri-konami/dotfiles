@@ -2,3 +2,5 @@
 !.vim/bundle/neobundle.vim
 .ssh/*
 !.ssh/config
+.tmux/plugins/*
+!.tmux/plugins/tpm
