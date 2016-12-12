@@ -189,6 +189,7 @@ NeoBundleLazy 'jason0x43/vim-js-indent', {
   \ 'autoload' : {
   \   'filetypes' : ['javascript', 'typescript', 'html'],
 \}}
+NeoBundleLazy 'othree/yajs.vim', {'autoload':{'filetypes':['javascript']}}
 
 let g:js_indent_typescript = 1
 
