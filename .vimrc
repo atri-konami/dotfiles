@@ -164,6 +164,7 @@ NeoBundle 'ujihisa/unite-colorscheme'
 "NeoBundle 'chakku000/OpenTemplate.vim'
 NeoBundle 'lervag/vimtex'
 NeoBundle 'mattn/sonictemplate-vim'
+NeoBundle 'tpope/vim-surround'
 
 "Lazys
 NeoBundleLazy 'Shougo/unite.vim', {

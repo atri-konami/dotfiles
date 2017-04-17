@@ -34,7 +34,7 @@ function zathura(){
 }
 
 alias \:q='exit'
-alias g++11='g++ -std=c++11'
+alias g++14='g++ -std=c++14'
 alias cp='cp -ir'
 alias gosh='rlwrap gosh'
 alias scheme='rlwrap scheme'
