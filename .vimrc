@@ -145,7 +145,7 @@ NeoBundle 'Shougo/neocomplete'
 NeoBundle 'scrooloose/nerdtree'
 "NeoBundle 'Shougo/neosnippet'
 "NeoBundle 'jpalardy/vim-slime'
-NeoBundle 'scrooloose/syntastic'
+"NeoBundle 'scrooloose/syntastic'
 "NeoBundle 'https://bitbucket.org/kovisoft/slimv'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'tpope/vim-fugitive'
@@ -205,12 +205,20 @@ let g:sonictemplate_vim_template_dir = [
 
  " LaTeX Quickrun
 let g:quickrun_config = {}
+
+function! RewriteSrc()
+    g:quickrun_config.srcfile = expand("%")
+endfunction
+
+let g:quickrun_no_default_key_mappings = 1
+nnoremap <Leader>r :call RewriteSrc()<CR>:QuickRun<CR>
+
+"\ 'srcfile' : expand("%"),
 let g:quickrun_config['tex'] = {
 \ 'command' : 'latexmk',
 \ 'outputter' : 'error',
 \ 'outputter/error/success' : 'null',
 \ 'outputter/error/error' : 'quickfix',
-\ 'srcfile' : expand("%"),
 \ 'cmdopt': '-pdfdvi',
 \ 'hook/sweep/files' : [
 \                      '%S:p:r.aux',
@@ -269,7 +277,7 @@ vnoremap <silent><buffer> <F5> :QuickRun -mode v -type tmptex<CR>
 " QuickRun and view compile result quickly (but don't preview pdf file)
 nnoremap <silent><F5> :QuickRun<CR>
 
-autocmd BufWritePost,FileWritePost *.tex QuickRun tex
+" autocmd BufWritePost,FileWritePost *.tex QuickRun tex
 
 filetype plugin indent on     " required!
 filetype indent on

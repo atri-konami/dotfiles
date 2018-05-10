@@ -1,4 +1,37 @@
-export PATH="/opt/mit-scheme/bin:/opt/openjml:/opt/Isabelle2016/bin:/opt/marp:/home/atri/bin:/home/atri/0xDBE-143.324.5/bin:/opt/eclipse-indigo:/opt/eclipse:$PATH"
+# Attache tmux
+if ( ! test $TMUX ) && ( ! expr $TERM : "^screen" > /dev/null ) && which tmux > /dev/null; then
+    if ( tmux has-session ); then
+    session=`tmux list-sessions | grep -e '^[0-9].*]$' | head -n 1 | sed -e 's/^\([0-9]\+\).*$/\1/'`
+        if [ -n "$session" ]; then
+        echo "Attache tmux session $session."
+            tmux attach-session -t $session
+    else
+        echo "Session has been already attached."
+        tmux list-sessions
+        fi
+    else
+    echo "Create new tmux session."
+    exec tmux
+    fi
+fi
+
+paths=(
+    "$HOME/.go/bin"
+    "/usr/local/go/bin"
+    "/opt/mit-scheme/bin"
+    "/opt/openjml"
+    "/opt/Isabelle2016/bin"
+    "/opt/marp"
+    "/opt/eclipse"
+)
+
+for p in ${paths[@]}; do
+    export PATH="$p:$PATH"
+done
+
+#export PATH="/opt/mit-scheme/bin:/opt/openjml:/opt/Isabelle2016/bin:/opt/marp:/home/atri/bin:/home/atri/0xDBE-143.324.5/bin:/opt/eclipse-indigo:/opt/eclipse:$PATH"
+export GOPATH="$HOME/.go"
+export GOBIN="$GOPATH/bin"
 
 if [ -d $HOME/.anyenv ]; then
     export PATH="$HOME/.anyenv/bin:$PATH"
@@ -30,7 +63,11 @@ function javac(){
 
 function zathura(){
     echo $1
-    /usr/bin/zathura $1 2>&1 1>/dev/null &
+    /usr/bin/zathura $1 1>/dev/null 2>&1 &
+}
+
+function weka(){
+    java -jar /opt/weka-3-8-1/weka.jar >/dev/null 2>&1 &
 }
 
 alias \:q='exit'
@@ -43,23 +80,8 @@ alias mozc-config='/usr/lib/mozc/mozc_tool -mode=config_dialog'
 alias mozc-dict='/usr/lib/mozc/mozc_tool -mode=dictionary_tool'
 alias tmux="TERM=xterm-256color tmux"
 alias rake="noglob rake"
-alias open="xdg-open 2>&1 > /dev/null"
+alias open="xdg-open >/dev/null 2>&1"
 alias pbcopy="xclip -selection clipboard"
 alias pbpaste="xclip -selection clipboard -o"
+alias jisabelle="/opt/Isabelle2016/Isabelle2016 > /dev/null 2>&1 &"
 
-# Attache tmux
-if ( ! test $TMUX ) && ( ! expr $TERM : "^screen" > /dev/null ) && which tmux > /dev/null; then
-    if ( tmux has-session ); then
-	session=`tmux list-sessions | grep -e '^[0-9].*]$' | head -n 1 | sed -e 's/^\([0-9]\+\).*$/\1/'`
-    	if [ -n "$session" ]; then
-	    echo "Attache tmux session $session."
-    	    tmux attach-session -t $session
-	else
-	    echo "Session has been already attached."
-	    tmux list-sessions
-    	fi
-    else
-	echo "Create new tmux session."
-	tmux
-    fi
-fi
