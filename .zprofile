@@ -1,28 +1,30 @@
+echo "Read .zprofile..."
 # Attache tmux
 if ( ! test $TMUX ) && ( ! expr $TERM : "^screen" > /dev/null ) && which tmux > /dev/null; then
     if ( tmux has-session ); then
     session=`tmux list-sessions | grep -e '^[0-9].*]$' | head -n 1 | sed -e 's/^\([0-9]\+\).*$/\1/'`
         if [ -n "$session" ]; then
-        echo "Attache tmux session $session."
-            tmux attach-session -t $session
-    else
-        echo "Session has been already attached."
-        tmux list-sessions
+            echo "Attache tmux session $session."
+                tmux attach-session -t $session
+        else
+            echo "Session has been already attached."
+            tmux list-sessions
         fi
     else
-    echo "Create new tmux session."
-    exec tmux
+        echo "Create new tmux session."
+        exec tmux
     fi
 fi
 
 paths=(
     "$HOME/.go/bin"
+    "$HOME/.local/bin"
     "/usr/local/go/bin"
     "/opt/mit-scheme/bin"
     "/opt/openjml"
     "/opt/Isabelle2016/bin"
-    "/opt/marp"
     "/opt/eclipse"
+    "/opt/marp"
 )
 
 for p in ${paths[@]}; do
@@ -84,4 +86,4 @@ alias open="xdg-open >/dev/null 2>&1"
 alias pbcopy="xclip -selection clipboard"
 alias pbpaste="xclip -selection clipboard -o"
 alias jisabelle="/opt/Isabelle2016/Isabelle2016 > /dev/null 2>&1 &"
-
+alias cont="fg %1"
