@@ -6,7 +6,7 @@ syntax enable
 "colorscheme solarized
 "colorscheme hybrid
 "colorscheme jellybeans
-colorscheme molokai
+"colorscheme molokai
 "let g:molokai_original = 1
 "let g:rehash256 = 1                                 
 
@@ -122,273 +122,273 @@ set laststatus=2
 " コマンド表示
 set showcmd
 
-filetype off
-
-"プラグインの闇
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim
-  call neobundle#begin(expand('~/.vim/bundle/'))
-endif
-" originalrepos on github
-NeoBundle 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc.vim', {
-  \ 'build' : {
-  \   'windows' : 'tools\\update-dll-mingw',
-  \   'cygwin' : 'make -f make_cygwin.mak',
-  \   'mac' : 'make',
-  \   'linux' : 'make',
-  \   'unix' : 'gmake',
-  \ },
-\ }
-NeoBundle 'Shougo/vimshell'
-NeoBundle 'Shougo/neocomplete'
-NeoBundle 'scrooloose/nerdtree'
-"NeoBundle 'Shougo/neosnippet'
-"NeoBundle 'jpalardy/vim-slime'
-"NeoBundle 'scrooloose/syntastic'
-"NeoBundle 'https://bitbucket.org/kovisoft/slimv'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'thinca/vim-quickrun'
-"NeoBundle 'airblade/vim-gitgutter'
-"NeoBundle 'alpaca-tc/alpaca_powertabline'
-"NeoBundle 'Lokaltog/powerline',{'rtp':'powerline/bindings/vim'}
-NeoBundle 'losingkeys/vim-niji'
-NeoBundle 'kana/vim-submode'
-NeoBundle 'ujihisa/unite-colorscheme'
-"NeoBundle 'kurocode25/mdforvim'
-"NeoBundle 'plasticboy/vim-markdown'
-"NeoBundle 'kannokanno/previm'
-"NeoBundle 'tyru/open-browser.vim'
-"NeoBundle 'thinca/vim-template'
-"NeoBundle 'chakku000/OpenTemplate.vim'
-NeoBundle 'lervag/vimtex'
-NeoBundle 'mattn/sonictemplate-vim'
-NeoBundle 'tpope/vim-surround'
-
-"Lazys
-NeoBundleLazy 'Shougo/unite.vim', {
-  \ 'autoload': {
-  \     'commands': ['Unite']
-  \ }
-\ }
-NeoBundleLazy 'aharisu/vim_goshrepl', {
-  \ 'autoload': {
-  \     'filetypes': ['scheme']
-  \ }
-\ }
-NeoBundleLazy 'kana/vim-filetype-haskell', {
-  \ 'autoload': {
-  \     'filetypes': ['haskell']
-  \ }
-\ }
-NeoBundleLazy 'leafgarland/typescript-vim', {
-  \ 'autoload' : {
-  \     'filetypes' : ['typescript'] }
-\}
-NeoBundleLazy 'jason0x43/vim-js-indent', {
-  \ 'autoload' : {
-  \   'filetypes' : ['javascript', 'typescript', 'html'],
-\}}
-NeoBundleLazy 'othree/yajs.vim', {'autoload':{'filetypes':['javascript']}}
-
-let g:js_indent_typescript = 1
-
-call neobundle#end()
-
-au BufRead,BufNewFile *.md set filetype=markdown
-
-let g:tex_flavor = 'latex'
-let g:sonictemplate_vim_template_dir = [
-    \ '~/work/templates'
-    \]
-
- " LaTeX Quickrun
-let g:quickrun_config = {}
-
-function! RewriteSrc()
-    g:quickrun_config.srcfile = expand("%")
-endfunction
-
-let g:quickrun_no_default_key_mappings = 1
-nnoremap <Leader>r :call RewriteSrc()<CR>:QuickRun<CR>
-
-"\ 'srcfile' : expand("%"),
-let g:quickrun_config['tex'] = {
-\ 'command' : 'latexmk',
-\ 'outputter' : 'error',
-\ 'outputter/error/success' : 'null',
-\ 'outputter/error/error' : 'quickfix',
-\ 'cmdopt': '-pdfdvi',
-\ 'hook/sweep/files' : [
-\                      '%S:p:r.aux',
-\                      '%S:p:r.bbl',
-\                      '%S:p:r.blg',
-\                      '%S:p:r.dvi',
-\                      '%S:p:r.fdb_latexmk',
-\                      '%S:p:r.fls',
-\                      '%S:p:r.log',
-\                      '%S:p:r.out'
-\                      ],
-\ 'exec': '%c %o %a %s',
-\}
-
-" 部分的に選択してコンパイル
-" http://auewe.hatenablog.com/entry/2013/12/25/033416 を参考に
-let g:quickrun_config.tmptex = {
-\   'exec': [
-\           'mv %s %a/tmptex.latex',
-\           'latexmk -pdfdvi -pv -output-directory=%a %a/tmptex.latex',
-\           ],
-\   'args' : expand("%:p:h:gs?\\\\?/?"),
-\   'outputter' : 'error',
-\   'outputter/error/error' : 'quickfix',
-\
-\   'hook/eval/enable' : 1,
-\   'hook/eval/cd' : "%s:r",
-\
-\   'hook/eval/template' : '\documentclass{jsarticle}'
-\                         .'\usepackage[dvipdfmx]{graphicx, hyperref}'
-\                         .'\usepackage{float}'
-\                         .'\usepackage{amsmath,amssymb,amsthm,ascmac,mathrsfs}'
-\                         .'\allowdisplaybreaks[1]'
-\                         .'\theoremstyle{definition}'
-\                         .'\newtheorem{theorem}{定理}'
-\                         .'\newtheorem*{theorem*}{定理}'
-\                         .'\newtheorem{definition}[theorem]{定義}'
-\                         .'\newtheorem*{definition*}{定義}'
-\                         .'\renewcommand\vector[1]{\mbox{\boldmath{\$#1\$}}}'
-\                         .'\begin{document}'
-\                         .'%s'
-\                         .'\end{document}',
-\
-\   'hook/sweep/files' : [
-\                        '%a/tmptex.latex',
-\                        '%a/tmptex.out',
-\                        '%a/tmptex.fdb_latexmk',
-\                        '%a/tmptex.log',
-\                        '%a/tmptex.aux',
-\                        '%a/tmptex.dvi'
-\                        ],
-\}
-
-vnoremap <silent><buffer> <F5> :QuickRun -mode v -type tmptex<CR>
-
-" QuickRun and view compile result quickly (but don't preview pdf file)
-nnoremap <silent><F5> :QuickRun<CR>
-
-" autocmd BufWritePost,FileWritePost *.tex QuickRun tex
+"filetype off
+"
+""プラグインの闇
+"if has('vim_starting')
+"  set runtimepath+=~/.vim/bundle/neobundle.vim
+"  call neobundle#begin(expand('~/.vim/bundle/'))
+"endif
+"" originalrepos on github
+"NeoBundle 'Shougo/neobundle.vim'
+"NeoBundle 'Shougo/vimproc.vim', {
+"  \ 'build' : {
+"  \   'windows' : 'tools\\update-dll-mingw',
+"  \   'cygwin' : 'make -f make_cygwin.mak',
+"  \   'mac' : 'make',
+"  \   'linux' : 'make',
+"  \   'unix' : 'gmake',
+"  \ },
+"\ }
+"NeoBundle 'Shougo/vimshell'
+"NeoBundle 'Shougo/neocomplete'
+"NeoBundle 'scrooloose/nerdtree'
+""NeoBundle 'Shougo/neosnippet'
+""NeoBundle 'jpalardy/vim-slime'
+""NeoBundle 'scrooloose/syntastic'
+""NeoBundle 'https://bitbucket.org/kovisoft/slimv'
+"NeoBundle 'itchyny/lightline.vim'
+"NeoBundle 'tpope/vim-fugitive'
+"NeoBundle 'thinca/vim-quickrun'
+""NeoBundle 'airblade/vim-gitgutter'
+""NeoBundle 'alpaca-tc/alpaca_powertabline'
+""NeoBundle 'Lokaltog/powerline',{'rtp':'powerline/bindings/vim'}
+"NeoBundle 'losingkeys/vim-niji'
+"NeoBundle 'kana/vim-submode'
+"NeoBundle 'ujihisa/unite-colorscheme'
+""NeoBundle 'kurocode25/mdforvim'
+""NeoBundle 'plasticboy/vim-markdown'
+""NeoBundle 'kannokanno/previm'
+""NeoBundle 'tyru/open-browser.vim'
+""NeoBundle 'thinca/vim-template'
+""NeoBundle 'chakku000/OpenTemplate.vim'
+"NeoBundle 'lervag/vimtex'
+"NeoBundle 'mattn/sonictemplate-vim'
+"NeoBundle 'tpope/vim-surround'
+"
+""Lazys
+"NeoBundleLazy 'Shougo/unite.vim', {
+"  \ 'autoload': {
+"  \     'commands': ['Unite']
+"  \ }
+"\ }
+"NeoBundleLazy 'aharisu/vim_goshrepl', {
+"  \ 'autoload': {
+"  \     'filetypes': ['scheme']
+"  \ }
+"\ }
+"NeoBundleLazy 'kana/vim-filetype-haskell', {
+"  \ 'autoload': {
+"  \     'filetypes': ['haskell']
+"  \ }
+"\ }
+"NeoBundleLazy 'leafgarland/typescript-vim', {
+"  \ 'autoload' : {
+"  \     'filetypes' : ['typescript'] }
+"\}
+"NeoBundleLazy 'jason0x43/vim-js-indent', {
+"  \ 'autoload' : {
+"  \   'filetypes' : ['javascript', 'typescript', 'html'],
+"\}}
+"NeoBundleLazy 'othree/yajs.vim', {'autoload':{'filetypes':['javascript']}}
+"
+"let g:js_indent_typescript = 1
+"
+"call neobundle#end()
+"
+"au BufRead,BufNewFile *.md set filetype=markdown
+"
+"let g:tex_flavor = 'latex'
+"let g:sonictemplate_vim_template_dir = [
+"    \ '~/work/templates'
+"    \]
+"
+" " LaTeX Quickrun
+"let g:quickrun_config = {}
+"
+"function! RewriteSrc()
+"    g:quickrun_config.srcfile = expand("%")
+"endfunction
+"
+"let g:quickrun_no_default_key_mappings = 1
+"nnoremap <Leader>r :call RewriteSrc()<CR>:QuickRun<CR>
+"
+""\ 'srcfile' : expand("%"),
+"let g:quickrun_config['tex'] = {
+"\ 'command' : 'latexmk',
+"\ 'outputter' : 'error',
+"\ 'outputter/error/success' : 'null',
+"\ 'outputter/error/error' : 'quickfix',
+"\ 'cmdopt': '-pdfdvi',
+"\ 'hook/sweep/files' : [
+"\                      '%S:p:r.aux',
+"\                      '%S:p:r.bbl',
+"\                      '%S:p:r.blg',
+"\                      '%S:p:r.dvi',
+"\                      '%S:p:r.fdb_latexmk',
+"\                      '%S:p:r.fls',
+"\                      '%S:p:r.log',
+"\                      '%S:p:r.out'
+"\                      ],
+"\ 'exec': '%c %o %a %s',
+"\}
+"
+"" 部分的に選択してコンパイル
+"" http://auewe.hatenablog.com/entry/2013/12/25/033416 を参考に
+"let g:quickrun_config.tmptex = {
+"\   'exec': [
+"\           'mv %s %a/tmptex.latex',
+"\           'latexmk -pdfdvi -pv -output-directory=%a %a/tmptex.latex',
+"\           ],
+"\   'args' : expand("%:p:h:gs?\\\\?/?"),
+"\   'outputter' : 'error',
+"\   'outputter/error/error' : 'quickfix',
+"\
+"\   'hook/eval/enable' : 1,
+"\   'hook/eval/cd' : "%s:r",
+"\
+"\   'hook/eval/template' : '\documentclass{jsarticle}'
+"\                         .'\usepackage[dvipdfmx]{graphicx, hyperref}'
+"\                         .'\usepackage{float}'
+"\                         .'\usepackage{amsmath,amssymb,amsthm,ascmac,mathrsfs}'
+"\                         .'\allowdisplaybreaks[1]'
+"\                         .'\theoremstyle{definition}'
+"\                         .'\newtheorem{theorem}{定理}'
+"\                         .'\newtheorem*{theorem*}{定理}'
+"\                         .'\newtheorem{definition}[theorem]{定義}'
+"\                         .'\newtheorem*{definition*}{定義}'
+"\                         .'\renewcommand\vector[1]{\mbox{\boldmath{\$#1\$}}}'
+"\                         .'\begin{document}'
+"\                         .'%s'
+"\                         .'\end{document}',
+"\
+"\   'hook/sweep/files' : [
+"\                        '%a/tmptex.latex',
+"\                        '%a/tmptex.out',
+"\                        '%a/tmptex.fdb_latexmk',
+"\                        '%a/tmptex.log',
+"\                        '%a/tmptex.aux',
+"\                        '%a/tmptex.dvi'
+"\                        ],
+"\}
+"
+"vnoremap <silent><buffer> <F5> :QuickRun -mode v -type tmptex<CR>
+"
+"" QuickRun and view compile result quickly (but don't preview pdf file)
+"nnoremap <silent><F5> :QuickRun<CR>
+"
+"" autocmd BufWritePost,FileWritePost *.tex QuickRun tex
 
 filetype plugin indent on     " required!
 filetype indent on
 
-let g:lightline = {
-        \ 'colorscheme': 'wombat',
-        \ 'mode_map': {'c': 'NORMAL'},
-        \ 'active': {
-        \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
-        \ },
-        \ 'component_function': {
-        \   'modified': 'MyModified',
-        \   'readonly': 'MyReadonly',
-        \   'fugitive': 'MyFugitive',
-        \   'filename': 'MyFilename',
-        \   'fileformat': 'MyFileformat',
-        \   'filetype': 'MyFiletype',
-        \   'fileencoding': 'MyFileencoding',
-        \   'mode': 'MyMode'
-        \ },
-		\ 'component': {
-        \   'readonly': '%{&readonly?"":"aaa"}',
-        \},
-        \ 'component_visible_condition': {
-        \   'readonly': '(&filetype!="help"&& &readonly)',
-        \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))'
-        \ },
-        \ 'separator': { 'left': '⮀', 'right': '⮂' },
-        \ 'subseparator': { 'left': '⮁', 'right': '⮃' },
-        \ 'tabline_separator': { 'left': '⮀', 'right': '⮂' },
-        \ 'tabline_subseparator': { 'left': '⮁', 'right': '⮃' },
-        \}
-"        \ 'separator': { 'left': "\u2b80", 'right': "\u2b82" },
-"        \ 'subseparator': { 'left': "\u2b81", 'right': "\u2b83" }
-"        \ 'separator': { 'left': '', 'right': '' },
-"        \ 'subseparator': { 'left': '', 'right': '' }
-
-function! MyModified()
-  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function! MyReadonly()
-  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
-endfunction
-
-function! MyFilename()
-  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
-        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \  &ft == 'unite' ? unite#get_status_string() :
-        \  &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
-        \ ('' != MyModified() ? ' ' . MyModified() : '')
-endfunction
-
-function! MyFugitive()
-  try
-    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
-      return fugitive#head()
-    endif
-  catch
-  endtry
-  return ''
-endfunction
-
-function! MyFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! MyFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! MyFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
-
-function! MyMode()
-  return winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-"なぜか最後に書かないと動作しない
-let g:solarized_termtrans=1
-highlight Normal ctermbg=none 
-" アンダーラインを引く(color terminal)
-highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
-
-" Key mapping
-
-" j&kを表示行移動に
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
-
-" Ctrl+jをESCにする
-inoremap <C-j> <ESC>
-noremap <Help> <ESC>
-
-" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
-cmap w!! w !sudo tee > /dev/null %
-
-" very magic(すべてのメタ文字を\なしで使用)
-nnoremap / /\v
-
-" Ctrl-EでNerdTreeをトグル
-nnoremap <C-e> :NERDTreeToggle<CR>
-
-let g:OpenTemplate#Template_dir = '~/work/kyo-pro/cp-template/template'
-nnoremap <C-l> :OpenTemplate<CR>
-
-vmap <CR> <Plug>(gosh_repl_send_block)
+"let g:lightline = {
+"        \ 'colorscheme': 'wombat',
+"        \ 'mode_map': {'c': 'NORMAL'},
+"        \ 'active': {
+"        \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+"        \ },
+"        \ 'component_function': {
+"        \   'modified': 'MyModified',
+"        \   'readonly': 'MyReadonly',
+"        \   'fugitive': 'MyFugitive',
+"        \   'filename': 'MyFilename',
+"        \   'fileformat': 'MyFileformat',
+"        \   'filetype': 'MyFiletype',
+"        \   'fileencoding': 'MyFileencoding',
+"        \   'mode': 'MyMode'
+"        \ },
+"		\ 'component': {
+"        \   'readonly': '%{&readonly?"":"aaa"}',
+"        \},
+"        \ 'component_visible_condition': {
+"        \   'readonly': '(&filetype!="help"&& &readonly)',
+"        \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))'
+"        \ },
+"        \ 'separator': { 'left': '⮀', 'right': '⮂' },
+"        \ 'subseparator': { 'left': '⮁', 'right': '⮃' },
+"        \ 'tabline_separator': { 'left': '⮀', 'right': '⮂' },
+"        \ 'tabline_subseparator': { 'left': '⮁', 'right': '⮃' },
+"        \}
+""        \ 'separator': { 'left': "\u2b80", 'right': "\u2b82" },
+""        \ 'subseparator': { 'left': "\u2b81", 'right': "\u2b83" }
+""        \ 'separator': { 'left': '', 'right': '' },
+""        \ 'subseparator': { 'left': '', 'right': '' }
+"
+"function! MyModified()
+"  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+"endfunction
+"
+"function! MyReadonly()
+"  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
+"endfunction
+"
+"function! MyFilename()
+"  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+"        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+"        \  &ft == 'unite' ? unite#get_status_string() :
+"        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+"        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+"        \ ('' != MyModified() ? ' ' . MyModified() : '')
+"endfunction
+"
+"function! MyFugitive()
+"  try
+"    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
+"      return fugitive#head()
+"    endif
+"  catch
+"  endtry
+"  return ''
+"endfunction
+"
+"function! MyFileformat()
+"  return winwidth(0) > 70 ? &fileformat : ''
+"endfunction
+"
+"function! MyFiletype()
+"  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+"endfunction
+"
+"function! MyFileencoding()
+"  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+"endfunction
+"
+"function! MyMode()
+"  return winwidth(0) > 60 ? lightline#mode() : ''
+"endfunction
+"
+""なぜか最後に書かないと動作しない
+"let g:solarized_termtrans=1
+"highlight Normal ctermbg=none 
+"" アンダーラインを引く(color terminal)
+"highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
+"
+"" Key mapping
+"
+"" j&kを表示行移動に
+"nnoremap j gj
+"nnoremap k gk
+"nnoremap gj j
+"nnoremap gk k
+"
+"" Ctrl+jをESCにする
+"inoremap <C-j> <ESC>
+"noremap <Help> <ESC>
+"
+"" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
+"cmap w!! w !sudo tee > /dev/null %
+"
+"" very magic(すべてのメタ文字を\なしで使用)
+"nnoremap / /\v
+"
+"" Ctrl-EでNerdTreeをトグル
+"nnoremap <C-e> :NERDTreeToggle<CR>
+"
+"let g:OpenTemplate#Template_dir = '~/work/kyo-pro/cp-template/template'
+"nnoremap <C-l> :OpenTemplate<CR>
+"
+"vmap <CR> <Plug>(gosh_repl_send_block)
 
 " for vim-submode
 
@@ -419,11 +419,11 @@ nnoremap sQ :<C-u>bd<CR>
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
-call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
-call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
-call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
-call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
-call submode#map('bufmove', 'n', '', '>', '<C-w>>')
-call submode#map('bufmove', 'n', '', '<', '<C-w><')
-call submode#map('bufmove', 'n', '', '+', '<C-w>+')
-call submode#map('bufmove', 'n', '', '-', '<C-w>-')
+"call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+"call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+"call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+"call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+"call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+"call submode#map('bufmove', 'n', '', '<', '<C-w><')
+"call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+"call submode#map('bufmove', 'n', '', '-', '<C-w>-')
